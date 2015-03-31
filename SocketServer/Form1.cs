@@ -14,10 +14,12 @@ namespace SocketServer
 {
     public partial class Form1 : Form
     {
+        string user = "";
         Socket ss = null;
         Socket s = null;
         public static List<Socket> sl = new List<Socket>();
         public static List<String> nl = new List<String>();
+        public static Dictionary<string, Socket> sd = new Dictionary<string, Socket>();
 
         Thread clientThread = null;
         public Form1()
@@ -53,7 +55,11 @@ namespace SocketServer
         {
             DataTable _dtSocket = new DataTable();
             _dtSocket.Columns.Add("Client");
-            foreach (string item in nl)
+            //foreach (string item in nl)
+            //{
+            //    _dtSocket.Rows.Add(item);
+            //}
+            foreach (string item in sd.Keys)
             {
                 _dtSocket.Rows.Add(item);
             }
@@ -67,8 +73,7 @@ namespace SocketServer
                 while (true)
                 {
                     ss = s.Accept();
-                    sl.Add(ss);
-                    nl.Add(Dns.GetHostName());
+                    RegeistUser(ss);
                     RefreshClient();
                     clientThread = new Thread(new ThreadStart(ReceiveData));
                     clientThread.Start();
@@ -78,6 +83,15 @@ namespace SocketServer
             {
                 MessageBox.Show(exp.ToString());
             }
+        }
+
+        /// <summary>
+        /// 注册socket对象到字典
+        /// </summary>
+        /// <param name="ss"></param>
+        public void RegeistUser(Socket ss)
+        {
+            sd.Add(Guid.NewGuid().ToString(), ss);
         }
 
         public delegate void SetDataSourceHandler(DataTable p_dtSource);
@@ -121,8 +135,10 @@ namespace SocketServer
                     byte[] recvBytes = new byte[1024];
                     int bytes;
                     bytes = ss.Receive(recvBytes, recvBytes.Length, 0); //从客户端接受消息
-                    recvStr = "\n Client:" + Encoding.ASCII.GetString(recvBytes, 0, bytes);
+                    recvStr = Encoding.UTF8.GetString(recvBytes, 0, bytes);
                     SetText(recvStr);
+                    SendMessageToTarget(recvStr);
+                   
                 }
             }
             catch (Exception exp)
@@ -131,21 +147,33 @@ namespace SocketServer
             }
         }
 
+        /// <summary>
+        /// 【转发】客户端信息
+        /// </summary>
+        /// <param name="user">转发目标</param>
+        /// <param name="message">消息内容</param>
+        public void SendMessageToTarget(string user, string message)
+        {
+            ss = sd[user];
+            SendOneMessage(message);
+        }
+
+        /// <summary>
+        /// 【转发】客户端信息
+        /// </summary>
+        /// <param name="userandmess">用户名:消息内容</param>
+        public void SendMessageToTarget(string userandmess)
+        {
+            string[] s = userandmess.Split(':');
+            SendMessageToTarget(s[0], s[1]);
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
-            //foreach (Socket item in sl)
-            //{
-            //    item.Close();
-            //}
             if (ss != null)
             {
-                ss.Close();
+                ss.Shutdown(SocketShutdown.Both);
             }
-            if (s != null)
-            {
-                s.Close();
-            }
-           
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -168,11 +196,15 @@ namespace SocketServer
         {
             foreach (Socket item in sl)
             {
-                byte[] bs = Encoding.ASCII.GetBytes(p_strsend);
+                byte[] bs = Encoding.UTF8.GetBytes(p_strsend);
                 ss.Send(bs, bs.Length, 0);  //返回信息给客户端
             }
         }
 
+        /// <summary>
+        /// 将消息内容发给客户端
+        /// </summary>
+        /// <param name="p_strsend"></param>
         public void SendOneMessage(string p_strsend)
         {
             byte[] bs = Encoding.ASCII.GetBytes(p_strsend);
@@ -182,7 +214,7 @@ namespace SocketServer
 
         private void dgv_client_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            ss = sl[e.RowIndex];
+            //ss = sl[e.RowIndex];
         }
 
     }

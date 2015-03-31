@@ -39,9 +39,9 @@
             this.txt_message = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.cb_all = new System.Windows.Forms.CheckBox();
             this.dgv_client = new System.Windows.Forms.DataGridView();
             this.Client = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cb_all = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -55,7 +55,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
-            this.button1.Text = "开始服务器";
+            this.button1.Text = "开启服务器";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -84,7 +84,7 @@
             this.txt_ip.Name = "txt_ip";
             this.txt_ip.Size = new System.Drawing.Size(92, 21);
             this.txt_ip.TabIndex = 3;
-            this.txt_ip.Text = "127.0.0.1";
+            this.txt_ip.Text = "192.168.70.99";
             // 
             // label2
             // 
@@ -164,6 +164,16 @@
             this.splitContainer1.SplitterDistance = 283;
             this.splitContainer1.TabIndex = 9;
             // 
+            // cb_all
+            // 
+            this.cb_all.AutoSize = true;
+            this.cb_all.Location = new System.Drawing.Point(149, 3);
+            this.cb_all.Name = "cb_all";
+            this.cb_all.Size = new System.Drawing.Size(60, 16);
+            this.cb_all.TabIndex = 10;
+            this.cb_all.Text = "所有人";
+            this.cb_all.UseVisualStyleBackColor = true;
+            // 
             // dgv_client
             // 
             this.dgv_client.AllowUserToAddRows = false;
@@ -191,16 +201,6 @@
             this.Client.ReadOnly = true;
             this.Client.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.Client.Width = 200;
-            // 
-            // cb_all
-            // 
-            this.cb_all.AutoSize = true;
-            this.cb_all.Location = new System.Drawing.Point(149, 3);
-            this.cb_all.Name = "cb_all";
-            this.cb_all.Size = new System.Drawing.Size(60, 16);
-            this.cb_all.TabIndex = 10;
-            this.cb_all.Text = "所有人";
-            this.cb_all.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
