@@ -39,7 +39,6 @@
             this.txt_message = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.cb_all = new System.Windows.Forms.CheckBox();
             this.dgv_client = new System.Windows.Forms.DataGridView();
             this.Client = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -158,21 +157,10 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.cb_all);
             this.splitContainer1.Panel2.Controls.Add(this.dgv_client);
             this.splitContainer1.Size = new System.Drawing.Size(518, 318);
             this.splitContainer1.SplitterDistance = 283;
             this.splitContainer1.TabIndex = 9;
-            // 
-            // cb_all
-            // 
-            this.cb_all.AutoSize = true;
-            this.cb_all.Location = new System.Drawing.Point(149, 3);
-            this.cb_all.Name = "cb_all";
-            this.cb_all.Size = new System.Drawing.Size(60, 16);
-            this.cb_all.TabIndex = 10;
-            this.cb_all.Text = "所有人";
-            this.cb_all.UseVisualStyleBackColor = true;
             // 
             // dgv_client
             // 
@@ -210,10 +198,10 @@
             this.Controls.Add(this.splitContainer1);
             this.Name = "Form1";
             this.Text = "Server";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgv_client)).EndInit();
@@ -236,7 +224,6 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.DataGridView dgv_client;
         private System.Windows.Forms.DataGridViewTextBoxColumn Client;
-        private System.Windows.Forms.CheckBox cb_all;
 
     }
 }
