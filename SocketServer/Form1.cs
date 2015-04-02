@@ -17,13 +17,18 @@ namespace SocketServer
     {
         #region 所有用户拼接字符串，以';'分割
         string users = "@";
-        #endregion
-        Socket client = null;
+        #endregion       
         Socket newsock = null;
+        //Socket client = null;
+        IntPtr ip = IntPtr.Zero;
         public static List<Socket> sl = new List<Socket>();
         public static List<String> nl = new List<String>();
-        public static Dictionary<string, Socket> sd = new Dictionary<string, Socket>();
+        public static Dictionary<string, Socket> userSocketDict = new Dictionary<string, Socket>();
+        public static Dictionary<IntPtr, Socket> handleSocketDict = new Dictionary<IntPtr, Socket>();
+        public static Dictionary<string, IntPtr> userHandleDict = new Dictionary<string, IntPtr>();
         Thread acceptClientThread = null;
+        List<Thread> receiveThreadList = new List<Thread>();
+        List<Thread> receiveMessageThreadList = new List<Thread>();
         public Form1()
         {
             InitializeComponent();
@@ -58,10 +63,11 @@ namespace SocketServer
         /// </summary>
         public void RefreshClient()
         {
+            UnionDict();
             DataTable _dtSocket = new DataTable();
             _dtSocket.Columns.Add("Client");
             users = "";
-            foreach (string item in sd.Keys)
+            foreach (string item in userSocketDict.Keys)
             {
                 _dtSocket.Rows.Add(item);
                 users += item + ";";
@@ -69,6 +75,17 @@ namespace SocketServer
             users = "@" + users.Trim(';');
             SendAllMessage(users);
             SetDataSource(_dtSocket);
+        }
+
+        /// <summary>
+        /// handleSocketDict 与 userHandleDict 合并为 userSocketDict
+        /// </summary>
+        public void UnionDict()
+        {
+            foreach (string user in userHandleDict.Keys)
+            {
+                userSocketDict.Add(user, handleSocketDict[userHandleDict[user]]);
+            }
         }
 
         /// <summary>
@@ -80,10 +97,12 @@ namespace SocketServer
             {
                 while (true)
                 {
-                    client = newsock.Accept();
-                    //ReceiveData();
-                    Thread clientThread = new Thread(new ThreadStart(ReceiveData));
-                    clientThread.Start();
+                    Socket client = newsock.Accept();
+                    ip = client.Handle;
+                    RegeistUser(client.Handle, client);
+                    Thread clientThread = new Thread(new ParameterizedThreadStart(ReceiveData));
+                    object o = client;
+                    clientThread.Start(o);
                 }
             }
             catch (Exception exp)
@@ -109,9 +128,32 @@ namespace SocketServer
         public void RegeistUser(string user, Socket ss)
         {
             user = user.Remove(0, 1);
-            sd.Add(user, ss);
+            userSocketDict.Add(user, ss);
             SendOneMessage(ss, "欢迎" + user + "连入！");
             RefreshClient();
+        }
+
+        /// <summary>
+        /// 指定用户名与handle对应
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="hindle"></param>
+        public void RegeistUser(string user, IntPtr hindle)
+        {
+            user = user.Remove(0, 1);
+            userHandleDict.Add(user,hindle);
+            RefreshClient();
+        }
+
+
+        /// <summary>
+        /// 将socket注册为指定用户名
+        /// </summary>
+        /// <param name="h">socket 句柄</param>
+        /// <param name="ss">socket</param>
+        public void RegeistUser(IntPtr h, Socket ss)
+        {
+            handleSocketDict.Add(h,ss);
         }
 
 
@@ -148,30 +190,49 @@ namespace SocketServer
                 rich_back.Text += "\n" + text;
             }
 
-        } 
+        }
 
         /// <summary>
         /// 接收客户端数据并，转发到目标客户端。
         /// </summary>
-        public void ReceiveData()
+        public void ReceiveData(object o)
         {
             try
             {
                 while (true)
                 {
+                    Socket client = (Socket)o;
                     string recvStr = "";
                     byte[] recvBytes = new byte[1024];
                     int bytes;
                     bytes = client.Receive(recvBytes, recvBytes.Length, 0); //从客户端接受消息
                     recvStr = Encoding.UTF8.GetString(recvBytes, 0, bytes);
-                    SendMessage(recvStr);
+                    SendMessage(client, recvStr);
                     SetText(recvStr);
+                    CommonFunction.WriteErrorLog(recvStr);
                 }
             }
             catch (Exception exp)
             {
                 CommonFunction.WriteLog(exp, exp.Message);
             }
+        }
+
+        public void ConnectAllClient()
+        {
+            //while (true)
+            //{
+            //    string recvStr = "";
+            //    byte[] recvBytes = new byte[1024];
+            //    int bytes;
+            //    bytes = client.Receive(recvBytes, recvBytes.Length, 0); //从客户端接受消息
+            //    recvStr = Encoding.UTF8.GetString(recvBytes, 0, bytes);
+            //    if ("" != recvStr)
+            //    {
+            //        SendMessage(client, recvStr);
+            //        SetText(recvStr);
+            //    }
+            //}
         }
 
         /// <summary>
@@ -182,7 +243,7 @@ namespace SocketServer
         /// <param name="message">消息</param>
         public void SendMessageToTarget(string user, string target, string message)
         {
-            SendOneMessage(sd[target], user + ":" + message);
+            SendOneMessage(userSocketDict[target], user + ":" + message);
         }
 
         /// <summary>
@@ -203,7 +264,7 @@ namespace SocketServer
         /// 判断是用户注册还是发送消息
         /// </summary>
         /// <param name="p_strMessage"></param>
-        public void SendMessage(string p_strMessage)
+        public void SendMessage(Socket client,string p_strMessage)
         {
             if (p_strMessage.StartsWith("@"))
             {
@@ -216,7 +277,8 @@ namespace SocketServer
             }
             else
             {
-                SendMessageToTarget(p_strMessage);
+                //SendMessageToTarget(p_strMessage);
+                SendAllMessage(p_strMessage);
             }
         }
 
@@ -227,16 +289,15 @@ namespace SocketServer
         public void DeleteClident(string p_strMessage)
         {
             p_strMessage = p_strMessage.Remove(0, 1);
-            MessageBox.Show(p_strMessage);
-            sd.Remove(p_strMessage);
+            userSocketDict.Remove(p_strMessage);
             RefreshClient();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (client != null)
+            if (newsock != null)
             {
-                client.Shutdown(SocketShutdown.Both);
+                newsock.Shutdown(SocketShutdown.Both);
             }
         }
 
@@ -256,10 +317,10 @@ namespace SocketServer
         public void SendAllMessage(string p_strsend)
         {
             //MessageBox.Show(p_strsend);
-            foreach (string item in sd.Keys)
+            foreach (string item in userSocketDict.Keys)
             {
                 byte[] bs = Encoding.UTF8.GetBytes(p_strsend);
-                sd[item].Send(bs, bs.Length, 0);  
+                userSocketDict[item].Send(bs, bs.Length, 0);  
             }
         }
 
@@ -281,9 +342,9 @@ namespace SocketServer
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (client!=null)
+            if (newsock != null)
             {
-                client.Close();
+                newsock.Close();
             }
             if (acceptClientThread!=null)
             {

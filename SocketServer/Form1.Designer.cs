@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -50,6 +52,7 @@
             // 
             // button1
             // 
+            this.button1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button1.Location = new System.Drawing.Point(188, 10);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
@@ -60,6 +63,7 @@
             // 
             // button2
             // 
+            this.button2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button2.Location = new System.Drawing.Point(188, 39);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
@@ -71,48 +75,54 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label1.Location = new System.Drawing.Point(12, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(17, 12);
+            this.label1.Size = new System.Drawing.Size(20, 17);
             this.label1.TabIndex = 2;
             this.label1.Text = "Ip";
             // 
             // txt_ip
             // 
+            this.txt_ip.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.txt_ip.Location = new System.Drawing.Point(90, 11);
             this.txt_ip.Name = "txt_ip";
-            this.txt_ip.Size = new System.Drawing.Size(92, 21);
+            this.txt_ip.Size = new System.Drawing.Size(92, 23);
             this.txt_ip.TabIndex = 3;
             this.txt_ip.Text = "192.168.70.99";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label2.Location = new System.Drawing.Point(12, 44);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(29, 12);
+            this.label2.Size = new System.Drawing.Size(32, 17);
             this.label2.TabIndex = 2;
             this.label2.Text = "Port";
             // 
             // txt_port
             // 
+            this.txt_port.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.txt_port.Location = new System.Drawing.Point(90, 40);
             this.txt_port.Name = "txt_port";
-            this.txt_port.Size = new System.Drawing.Size(92, 21);
+            this.txt_port.Size = new System.Drawing.Size(92, 23);
             this.txt_port.TabIndex = 3;
             this.txt_port.Text = "3000";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label3.Location = new System.Drawing.Point(12, 68);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(65, 12);
+            this.label3.Size = new System.Drawing.Size(56, 17);
             this.label3.TabIndex = 4;
-            this.label3.Text = "客户端信息";
+            this.label3.Text = "对话信息";
             // 
             // rich_back
             // 
+            this.rich_back.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.rich_back.Location = new System.Drawing.Point(12, 92);
             this.rich_back.Name = "rich_back";
             this.rich_back.Size = new System.Drawing.Size(256, 188);
@@ -121,13 +131,15 @@
             // 
             // txt_message
             // 
+            this.txt_message.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.txt_message.Location = new System.Drawing.Point(12, 287);
             this.txt_message.Name = "txt_message";
-            this.txt_message.Size = new System.Drawing.Size(161, 21);
+            this.txt_message.Size = new System.Drawing.Size(161, 23);
             this.txt_message.TabIndex = 7;
             // 
             // button3
             // 
+            this.button3.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.button3.Location = new System.Drawing.Point(188, 286);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
@@ -166,6 +178,14 @@
             // 
             this.dgv_client.AllowUserToAddRows = false;
             this.dgv_client.AllowUserToDeleteRows = false;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgv_client.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgv_client.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_client.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Client});
@@ -182,13 +202,15 @@
             // 
             // Client
             // 
+            this.Client.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Client.DataPropertyName = "Client";
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Client.DefaultCellStyle = dataGridViewCellStyle2;
             this.Client.HeaderText = "客户端";
             this.Client.MinimumWidth = 200;
             this.Client.Name = "Client";
             this.Client.ReadOnly = true;
             this.Client.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Client.Width = 200;
             // 
             // Form1
             // 
