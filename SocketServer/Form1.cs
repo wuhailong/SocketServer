@@ -23,6 +23,7 @@ namespace SocketServer
         IntPtr ip = IntPtr.Zero;
         public static List<Socket> sl = new List<Socket>();
         public static List<String> nl = new List<String>();
+        public static List<Thread> clientThreadList = new List<Thread>();
         public static Dictionary<string, Socket> userSocketDict = new Dictionary<string, Socket>();
         public static Dictionary<IntPtr, Socket> handleSocketDict = new Dictionary<IntPtr, Socket>();
         public static Dictionary<string, IntPtr> userHandleDict = new Dictionary<string, IntPtr>();
@@ -50,7 +51,7 @@ namespace SocketServer
                 //为新建立的连接创建新的Socket
                 acceptClientThread = new Thread(new ThreadStart(AcceptClient));
                 acceptClientThread.Start();
-                SetText("开始监听");
+                rich_back.Text += "Server：服务器已开启";
             }
             catch (Exception exp)
             {
@@ -101,6 +102,7 @@ namespace SocketServer
                     ip = client.Handle;
                     RegeistUser(client.Handle, client);
                     Thread clientThread = new Thread(new ParameterizedThreadStart(ReceiveData));
+                    clientThreadList.Add(clientThread);
                     object o = client;
                     clientThread.Start(o);
                 }
@@ -295,18 +297,43 @@ namespace SocketServer
 
         private void button2_Click(object sender, EventArgs e)
         {
+            CloseServer();
+        }
+
+        /// <summary>
+        /// 关闭服务器
+        /// </summary>
+        public void CloseServer()
+        {
+            SendAllMessage("Server@ALL:服务器已关闭");
+            rich_back.Text += "\n Server：服务器已关闭";
+            userHandleDict.Clear();
+            handleSocketDict.Clear();
+            userSocketDict.Clear();
+            RefreshClient();
             if (newsock != null)
             {
-                newsock.Shutdown(SocketShutdown.Both);
+                newsock.Close(2000);
+            }
+            if (acceptClientThread != null)
+            {
+                acceptClientThread.Abort();
+            }
+            if (clientThreadList != null)
+            {
+                foreach (Thread item in clientThreadList)
+                {
+                    item.Abort();
+                }
             }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             //给Client端返回信息
-            string sendStr = txt_message.Text;
-            SendAllMessage(sendStr);
-            rich_back.Text += "\n 我：" + sendStr;
+            string sendStr =  txt_message.Text;
+            SendAllMessage("Server@ALL:" + sendStr);
+            rich_back.Text += "\n Server：" + sendStr;
             txt_message.Text = "";
         }
 
@@ -342,14 +369,7 @@ namespace SocketServer
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (newsock != null)
-            {
-                newsock.Close();
-            }
-            if (acceptClientThread!=null)
-            {
-                acceptClientThread.Abort();
-            }
+            CloseServer();
         }
 
     }
