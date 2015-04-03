@@ -89,7 +89,7 @@
             this.txt_ip.Name = "txt_ip";
             this.txt_ip.Size = new System.Drawing.Size(92, 23);
             this.txt_ip.TabIndex = 3;
-            this.txt_ip.Text = "192.168.70.99";
+            this.txt_ip.Text = "192.168.1.103";
             // 
             // label2
             // 
@@ -136,6 +136,7 @@
             this.txt_message.Name = "txt_message";
             this.txt_message.Size = new System.Drawing.Size(161, 23);
             this.txt_message.TabIndex = 7;
+            this.txt_message.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_message_KeyPress);
             // 
             // button3
             // 
@@ -221,6 +222,7 @@
             this.Name = "Form1";
             this.Text = "Server";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPress);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);

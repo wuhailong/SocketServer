@@ -328,13 +328,18 @@ namespace SocketServer
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        public void Send()
         {
             //给Client端返回信息
-            string sendStr =  txt_message.Text;
+            string sendStr = txt_message.Text;
             SendAllMessage("Server@ALL:" + sendStr);
             rich_back.Text += "\n Server：" + sendStr;
             txt_message.Text = "";
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Send();
         }
 
         /// <summary>
@@ -370,6 +375,22 @@ namespace SocketServer
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             CloseServer();
+        }
+
+        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 27)
+            {
+                Send();
+            }
+        }
+
+        private void txt_message_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\r')
+            {
+                Send();
+            }
         }
 
     }
