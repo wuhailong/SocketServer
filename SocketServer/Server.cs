@@ -13,7 +13,7 @@ using ToolFunction;
 
 namespace SocketServer
 {
-    public partial class Form1 : Form
+    public partial class Server : Form
     {
         #region 所有用户拼接字符串，以';'分割
         string users = "@";
@@ -30,7 +30,7 @@ namespace SocketServer
         Thread acceptClientThread = null;
         List<Thread> receiveThreadList = new List<Thread>();
         List<Thread> receiveMessageThreadList = new List<Thread>();
-        public Form1()
+        public Server()
         {
             InitializeComponent();
         }
